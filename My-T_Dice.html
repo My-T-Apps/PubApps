@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        .die {
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #cbd5e0;
+            color: #1a202c;
+            font-size: 2rem;
+            font-weight: bold;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .die-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans p-4">
+
+    <!-- Main Container -->
+    <div class="max-w-xl mx-auto p-8 rounded-2xl shadow-2xl bg-gray-800 border border-gray-700">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-center mb-6 text-yellow-300">My-T Dice</h1>
+        <p class="text-center text-gray-400 mb-8">Select the number of dice and roll!</p>
+
+        <!-- Control Panel -->
+        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+            <label for="diceCount" class="text-lg font-semibold text-gray-300">Number of Dice:</label>
+            <select id="diceCount" class="bg-gray-700 text-gray-100 p-3 rounded-lg border-2 border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+            </select>
+            <button id="rollButton" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800">
+                Roll Dice
+            </button>
+        </div>
+
+        <!-- Results Display -->
+        <div id="results" class="flex flex-col items-center space-y-6">
+            <div id="diceResults" class="die-container"></div>
+            <div id="stats" class="w-full grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div id="total" class="bg-gray-700 p-4 rounded-lg shadow-inner border border-gray-600">
+                    <p class="text-gray-400 text-sm">Total</p>
+                    <p class="text-3xl font-bold text-green-400 mt-1">0</p>
+                </div>
+                <div id="high" class="bg-gray-700 p-4 rounded-lg shadow-inner border border-gray-600">
+                    <p class="text-gray-400 text-sm">High</p>
+                    <p class="text-3xl font-bold text-red-400 mt-1">0</p>
+                </div>
+                <div id="low" class="bg-gray-700 p-4 rounded-lg shadow-inner border border-gray-600">
+                    <p class="text-gray-400 text-sm">Low</p>
+                    <p class="text-3xl font-bold text-blue-400 mt-1">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get references to HTML elements
+            const diceCountSelect = document.getElementById('diceCount');
+            const rollButton = document.getElementById('rollButton');
+            const diceResultsDiv = document.getElementById('diceResults');
+            const totalDisplay = document.querySelector('#total p:last-child');
+            const highDisplay = document.querySelector('#high p:last-child');
+            const lowDisplay = document.querySelector('#low p:last-child');
+
+            // Add event listener to the roll button
+            rollButton.addEventListener('click', () => {
+                const numberOfDice = parseInt(diceCountSelect.value);
+                const rolls = [];
+
+                // Clear previous results
+                diceResultsDiv.innerHTML = '';
+
+                // Roll each die and store the result
+                for (let i = 0; i < numberOfDice; i++) {
+                    const roll = Math.floor(Math.random() * 6) + 1;
+                    rolls.push(roll);
+
+                    // Create a die element for the display
+                    const dieElement = document.createElement('div');
+                    dieElement.className = 'die animate-bounce-in';
+                    dieElement.textContent = roll;
+                    diceResultsDiv.appendChild(dieElement);
+                }
+
+                // Calculate total, high, and low
+                const total = rolls.reduce((sum, current) => sum + current, 0);
+                const high = Math.max(...rolls);
+                const low = Math.min(...rolls);
+
+                // Update the display with the calculated values
+                totalDisplay.textContent = total;
+                highDisplay.textContent = high;
+                lowDisplay.textContent = low;
+            });
+        });
+    </script>
+</body>
+</html>
